@@ -26,7 +26,9 @@ app.get('/', (req, res) => {
     res.send('Home');
 });
 
-app.listen(port);
+app.listen(port, () => {
+    console.log(`Running on port ${port}`);
+});
 
 routerApi(app);
 

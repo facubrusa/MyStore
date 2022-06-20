@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
-const { CATEGORY_TABLE } = require('./category.model');
+const { USER_TABLE } = require('./user.model');
 
-const PRODUCT_TABLE = 'products';
+const CUSTOMER_TABLE = 'customers';
 
-const ProductSchema = {
+const CustomerSchema = {
     id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,16 +14,13 @@ const ProductSchema = {
         allowNull: false,
         type: DataTypes.STRING,
     },
-    description: {
+    lastName: {
         allowNull: false,
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
+        field: 'last_name',
     },
-    price: {
-        allowNull: false,
-        type: DataTypes.FLOAT,
-    },
-    image: {
-        allowNull: false,
+    phone: {
+        allowNull: true,
         type: DataTypes.STRING,
     },
     createdAt: {
@@ -32,36 +29,37 @@ const ProductSchema = {
         field: 'created_at',
         defaultValue: DataTypes.NOW,
     },
-    categoryId: {
-        field: 'category_id',
+    userId: {
+        field: 'user_id',
         allowNull: false,
         type: DataTypes.INTEGER,
+        unique: true,
         references: {
-            model: CATEGORY_TABLE,
+            model: USER_TABLE,
             key: 'id'
         },
         // What do when update or delete the user
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
-    }
+    },
 }
 
-class Product extends Model {
+class Customer extends Model {
     // Static because we don't need create a instance if we call the function
+
     static assocciate(models) {
         // This class has a relation with ..
-        // A product has a relation with just one category
-        this.belongsTo(models.Category, { as: 'category'});
+        this.belongsTo(models.User, { as: 'user'});
     }
 
     static config(sequelize) {
         return {
             sequelize,
-            tableName: PRODUCT_TABLE,
-            modelName: 'Product',
+            tableName: CUSTOMER_TABLE,
+            modelName: 'Customer',
             timestamps: false
         }
     }
 }
 
-module.exports = { PRODUCT_TABLE, ProductSchema, Product };
+module.exports = { CUSTOMER_TABLE, CustomerSchema, Customer };

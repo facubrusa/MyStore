@@ -18,6 +18,11 @@ const UserSchema = {
         allowNull: false,
         type: DataTypes.STRING,
     },
+    role: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        defaultValue: 'customer',
+    },
     createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
@@ -28,8 +33,11 @@ const UserSchema = {
 
 class User extends Model {
     // Static because we don't need create a instance if we call the function
-    static assocciate() {
-        // models
+    static assocciate(models) {
+        this.hasOne(models.Customer, {
+            as: 'customer',
+            foreignKey: 'userId'
+        });
     }
 
     static config(sequelize) {

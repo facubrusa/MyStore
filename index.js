@@ -2,7 +2,7 @@ const express = require('express');
 const routerApi = require('./routers');
 const cors = require('cors');
 
-const { logErrors, errorHandler, boomErrorHanlder } = require('./middlewares/error.handler');
+const { logErrors, boomErrorHanlder, ormErrorHandler } = require('./middlewares/error.handler');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -27,12 +27,14 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Running on port ${port}`);
+    if(process.env.ENV === 'development') {
+        console.log(`Running on port ${port}`);
+    }
 });
 
 routerApi(app);
 
 // Always put the middlewares after the router
 app.use(logErrors);
+app.use(ormErrorHandler);
 app.use(boomErrorHanlder);
-app.use(errorHandler);

@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 
-const USER_TABLE = 'categories';
+const CATEGORY_TABLE = 'categories';
 
 const CategorySchema = {
     id: {
@@ -27,18 +27,23 @@ const CategorySchema = {
 
 class Category extends Model {
     // Static because we don't need create a instance if we call the function
-    static assocciate() {
-        // models
+    static assocciate(models) {
+        // This class has a relation with ..
+        // One category can relationate with many products..
+        this.hasMany(models.Product, {
+            as: 'products',
+            foreignKey: 'categoryId'
+        });
     }
 
     static config(sequelize) {
         return {
             sequelize,
-            tableName: USER_TABLE,
+            tableName: CATEGORY_TABLE,
             modelName: 'Category',
             timestamps: false
         }
     }
 }
 
-module.exports = { USER_TABLE, CategorySchema, Category };
+module.exports = { CATEGORY_TABLE, CategorySchema, Category };

@@ -5,16 +5,17 @@ const {
     createProductSchema,
     updateProductSchema,
     getProductSchema,
+    queryProductSchema
 } = require('../schemas/product.schema');
 
 const router = express.Router();
 const service = new ProductsService();
 
-router.get('/', async (req, res, next) => {
+router.get('/',
+    validatorHandler(queryProductSchema, 'query'),
+    async (req, res, next) => {
     try {
-        const { size } = req.query;
-        const limit = size || 10;
-        const products = await service.find(limit);
+        const products = await service.find(req.query);
         res.status(200).json(products);
     } catch (error) {
         // Call the middleware (error handler)

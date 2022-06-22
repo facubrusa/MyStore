@@ -28,6 +28,18 @@ const OrderSchema = {
         field: 'created_at',
         defaultValue: DataTypes.NOW,
     },
+    // Virtual column that return the total of the order
+    total: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            if(this.items.length > 0) {
+                return this.items.reduce((total, item) => {
+                    return total + (item.price * item.OrderProduct.quantity)
+                }, 0);
+            }
+            return 0;
+        },
+    }
 }
 
 class Order extends Model {
@@ -36,6 +48,14 @@ class Order extends Model {
         // This class has a relation with ..
         // A order has a relation with just one customer
         this.belongsTo(models.Customer, { as: 'customer'});
+        // This model (Order) will have a relation with many product
+        // and it will be resolved with a ternary table
+        this.belongsToMany(models.Product, { // what is the item that will be repeated
+            as: 'items',
+            through: models.OrderProduct, // Which table resolve the relation
+            foreignKey: 'orderId', // Specify foreign key that belongs to THIS model
+            otherKey: 'productId' // Specify the other foreign key
+        });
     }
 
     static config(sequelize) {

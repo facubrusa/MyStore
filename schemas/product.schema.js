@@ -12,7 +12,6 @@ const limit = Joi.number().integer();
 const offset = Joi.number().integer();
 
 const min_price = Joi.number().integer();
-const max_price = Joi.number().integer();
 
 const createProductSchema = Joi.object({
     name: name.required(),
@@ -39,7 +38,7 @@ const queryProductSchema = Joi.object({
     offset,
     price,
     min_price,
-    max_price: max_price.when('min_price', {
+    max_price: Joi.alternatives().conditional('min_price', {
         is: Joi.number().integer(),
         then: Joi.required(),
     }),

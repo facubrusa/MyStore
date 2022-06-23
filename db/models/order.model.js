@@ -29,7 +29,8 @@ const OrderSchema = {
         defaultValue: DataTypes.NOW,
     },
     // Virtual column that return the total of the order
-    total: {
+    // Commented because heroku don't support this type
+    /* total: {
         type: DataTypes.VIRTUAL,
         get() {
             if(this.items.length > 0) {
@@ -39,7 +40,7 @@ const OrderSchema = {
             }
             return 0;
         },
-    }
+    }, */
 }
 
 class Order extends Model {

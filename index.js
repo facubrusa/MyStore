@@ -3,6 +3,7 @@ const routerApi = require('./routers');
 const cors = require('cors');
 
 const { logErrors, boomErrorHanlder, ormErrorHandler } = require('./middlewares/error.handler');
+const { checkApiKey } = require('./middlewares/auth.handler');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -22,7 +23,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.get('/', (req, res) => {
+require('./utils/auth');
+
+app.get('/',
+    checkApiKey,
+    (req, res) => {
     res.send('Home');
 });
 

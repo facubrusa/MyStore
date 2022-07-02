@@ -1,4 +1,6 @@
 const express = require('express');
+const passport = require('passport');
+
 const ProductsService = require('../services/products.service');
 const validatorHandler = require('../middlewares/validator.handler');
 const {
@@ -37,6 +39,7 @@ router.get('/:id',
 );
 
 router.post('/',
+    passport.authenticate('jwt', { session: false }),
     validatorHandler(createProductSchema, 'body'),
     async (req, res, next) => {
         try {
@@ -53,6 +56,7 @@ router.post('/',
 );
 
 router.patch('/:id',
+    passport.authenticate('jwt', { session: false }),
     validatorHandler(getProductSchema, 'params'), // Validate id
     validatorHandler(updateProductSchema, 'body'), // Validate body
     async (req, res, next) => {
@@ -71,6 +75,7 @@ router.patch('/:id',
 );
 
 router.delete('/:id',
+    passport.authenticate('jwt', { session: false }),
     validatorHandler(getProductSchema, 'params'), // Validate id
     async (req, res, next) => {
         try {

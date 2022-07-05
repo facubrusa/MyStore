@@ -3,6 +3,7 @@ const passport = require('passport');
 
 const UserService = require('../services/user.service');
 const validatorHandler = require('../middlewares/validator.handler');
+const { checkRoles } = require('../middlewares/auth.handler');
 const {
     updateUserSchema,
     createUserSchema,
@@ -36,6 +37,7 @@ router.get('/:id',
 
 router.post('/',
     passport.authenticate('jwt', { session: false }),
+    checkRoles('seller'),
     validatorHandler(createUserSchema, 'body'),
     async (req, res, next) => {
         try {
@@ -53,6 +55,7 @@ router.post('/',
 
 router.patch('/:id',
     passport.authenticate('jwt', { session: false }),
+    checkRoles('seller'),
     validatorHandler(getUserSchema, 'params'),
     validatorHandler(updateUserSchema, 'body'),
     async (req, res, next) => {
@@ -72,6 +75,7 @@ router.patch('/:id',
 
 router.delete('/:id',
     passport.authenticate('jwt', { session: false }),
+    checkRoles('seller'),
     validatorHandler(getUserSchema, 'params'),
     async (req, res, next) => {
         try {

@@ -4,8 +4,16 @@ const { models } = require('../libs/sequelize');
 class OrdersService {
     constructor() {}
 
-    async create(data) {
-        const response = await models.Order.create(data);
+    async create(userId) {
+        const customer = await models.Customer.findOne({
+            where: {
+                userId: userId
+            }
+        });
+        if(!customer) {
+            throw boom.notFound('Customer not found');
+        }
+        const response = await models.Order.create({ customerId: customer.dataValues.id});
         return response;
     }
 

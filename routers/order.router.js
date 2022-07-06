@@ -6,7 +6,6 @@ const validatorHandler = require('../middlewares/validator.handler');
 const { checkRoles } = require('../middlewares/auth.handler');
 const {
     getOrderSchema,
-    createOrderSchema,
     updateOrderSchema,
     addItemSchema,
 } = require('../schemas/order.schema');
@@ -40,11 +39,11 @@ router.get('/:id',
 router.post('/',
     passport.authenticate('jwt', { session: false }),
     checkRoles('seller', 'customer'),
-    validatorHandler(createOrderSchema, 'body'),
+    // validatorHandler(createOrderSchema, 'body'),
     async (req, res, next) => {
         try {
-            const body = req.body;
-            const newOrder = await service.create(body);
+            const user = req.user;
+            const newOrder = await service.create(user.sub);
             res.status(201).json({
                 message: 'Order created',
                 data: newOrder,

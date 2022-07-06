@@ -31,11 +31,7 @@ app.get('/',
     res.send('Home');
 });
 
-app.listen(port, () => {
-    if(process.env.ENV === 'development') {
-        console.log(`Running on port ${port}`);
-    }
-});
+app.listen(port);
 
 routerApi(app);
 
